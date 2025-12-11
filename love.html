@@ -10,19 +10,7 @@
     <!-- Load Tone.js for background music generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.min.js"></script>
     
-    <!-- FIREBASE MODULE IMPORTS -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, addDoc, onSnapshot, collection, query, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Global variables exposed for the main script
-        window.firebase = {
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
-            getFirestore, addDoc, onSnapshot, collection, query, serverTimestamp, setLogLevel
-        };
-    </script>
-    <!-- END FIREBASE MODULE IMPORTS -->
+    <!-- FIREBASE MODULE IMPORTS (REMOVED) -->
 
     <style>
         /* --- THEME COLORS --- */
@@ -152,7 +140,114 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .interactive-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #secretCode {
+            padding: 15px;
+            margin: 20px 0;
+            border: 3px solid var(--color-gold);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.5em;
+            font-family: 'Lora', serif;
+            max-width: 90%;
+            width: 300px;
+            color: var(--color-rose);
+            box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+        }
+
+        .lock-box .interactive-btn {
+            background-color: var(--color-rose);
+            color: white;
+            width: 90%;
+            max-width: 330px;
+        }
+        
+        #audioToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 200;
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border-radius: 50%;
+            background-color: var(--color-gold);
+            color: white;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        #audioToggle:hover {
+            transform: scale(1.1);
+        }
+
+        .music-player-container {
+            margin: 30px auto;
+            max-width: 500px;
+            background-color: rgba(128, 0, 32, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px dashed var(--color-rose);
+        }
+        
+        #userSongPlayer {
+            width: 100%;
+            height: 280px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .quote {
+            font-style: italic;
+            color: var(--color-gold);
+            margin: 30px 0;
+            padding: 0 20px;
+            border-left: 5px solid var(--color-rose);
+            line-height: 1.4;
+            font-size: 1.2em;
+        }
+        
+        .rose-divider {
+            border: none;
+            height: 1px;
+            background-color: var(--color-rose);
+            margin: 50px 0;
+            opacity: 0.5;
+        }
+        
+        .closing-signature {
+            font-family: 'Alex Brush', cursive;
+            font-size: 2.5em;
+            color: var(--color-rose);
+            margin-top: 50px;
+            line-height: 1.2;
+        }
+        
+        .signature {
+            display: block;
+            margin-top: -10px;
+            font-size: 1.5em;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-charcoal);
+            font-size: 0.9em;
+            opacity: 0.7;
+            text-align: center;
+        }
+
         /* --- MEMORY BOX & NOTE STYLES --- */
+        /* These sections are now purely client-side/static placeholders */
         .memory-box {
             /* Container styling */
         }
@@ -165,6 +260,7 @@
             border-radius: 5px;
             min-height: 80px;
             resize: vertical;
+            font-family: 'Crimson Text', serif;
         }
         
         .memory-submit-btn {
@@ -173,6 +269,7 @@
             float: right;
             padding: 8px 20px;
             font-size: 1em;
+            margin-bottom: 20px;
         }
         
         .memory-list {
@@ -391,6 +488,7 @@
             <p style="font-size: 0.9em; opacity: 0.8;">
                 *The song starts at **3 minutes, 56 seconds**. Enjoy this special part!*
             </p>
+            <!-- YouTube player is now muted and set to autoplay/loop the correct segment -->
             <iframe id="userSongPlayer" 
                 src=""
                 data-src="https://www.youtube.com/embed/tVAfKIyVJ-M?autoplay=1&mute=1&loop=1&playlist=tVAfKIyVJ-M&start=236"
@@ -507,7 +605,7 @@
             </div>
         </div>
         
-        <!-- NEW: 7. DIGITAL GIFTS / TEDDY BOX -->
+        <!-- NEW: 7. DIGITAL GIFTS / TEDDY BOX (Data saving removed) -->
         <h2 class="section-title">🧸 IX. A Cuddle Corner 🧸</h2>
         <p style="text-align: center; font-style: italic; opacity: 0.9;">
             Sending you a digital hug! Feel free to leave a note for this furry friend.
@@ -515,33 +613,42 @@
         <div class="countdown-box" style="margin-bottom: 50px;">
             <div style="font-size: 4em; margin-bottom: 10px;">🧸</div>
             <p style="font-family: 'Lora', serif; font-weight: 600; color: var(--color-rose);">
-                This little teddy bear holds all my cuddles for you.
+                This little teddy bear holds all my cuddles for you. (Note: Message saving is currently disabled).
             </p>
             <textarea id="teddyNoteInput" class="memory-input" placeholder="Say something nice to Teddy..."></textarea>
-            <button onclick="saveTeddyNote()" class="interactive-btn memory-submit-btn" style="background-color: var(--color-gold); color: white;">Send Note</button>
+            <!-- saveTeddyNote function is now a placeholder with alert() replacement -->
+            <button onclick="alert('Note saving is disabled without a database!')" class="interactive-btn memory-submit-btn" style="background-color: var(--color-gold); color: white;">Send Note</button>
             <div id="teddyNotesContainer" class="memory-list" style="margin-top: 50px; text-align: left;">
-                <h3 style="font-size: 1.3em; font-family: 'Lora', serif; color: var(--color-rose); margin-bottom: 15px; clear: both;">Teddy's Messages:</h3>
-                <!-- Teddy notes will be loaded here -->
-                <p style="opacity: 0.7;">Loading Teddy's messages...</p>
+                <h3 style="font-size: 1.3em; font-family: 'Lora', serif; color: var(--color-rose); margin-bottom: 15px; clear: both;">Teddy's Messages (Placeholder):</h3>
+                <!-- Static Placeholder Message -->
+                <div class="memory-item">
+                    <p style="margin: 0; white-space: pre-wrap;">I love you more than words can say, sweet Neha!</p>
+                    <span class="memory-date">Saved: Always</span>
+                </div>
             </div>
         </div>
         
-        <!-- 8. PRIVATE MEMORY BOX -->
+        <!-- 8. PRIVATE MEMORY BOX (Data saving removed) -->
         <div class="memory-box">
             <h2 class="section-title" style="text-align: center; border: none; margin-bottom: 25px;">
                 💌 X. Our Private Memory Box
             </h2>
             <p style="text-align: center; font-style: italic; color: var(--color-rose); margin-bottom: 20px;">
-                Jot down a beautiful moment, a silly joke, or a cherished memory of Neha. These are stored just for you.
+                Jot down a beautiful moment, a silly joke, or a cherished memory of Neha. (Note: These are not saved without a database.)
             </p>
             
             <textarea id="memoryInput" class="memory-input" placeholder="What's a sweet memory you want to save?"></textarea>
-            <button onclick="saveMemory()" class="interactive-btn memory-submit-btn">Save Memory</button>
+            <!-- saveMemory function is now a placeholder with alert() replacement -->
+            <button onclick="alert('Memory saving is disabled without a database!')" class="interactive-btn memory-submit-btn">Save Memory</button>
 
             <div class="memory-list">
-                <h3 style="font-size: 1.3em; font-family: 'Lora', serif; color: var(--color-rose); margin-bottom: 15px; clear: both;">Saved Moments:</h3>
+                <h3 style="font-size: 1.3em; font-family: 'Lora', serif; color: var(--color-rose); margin-bottom: 15px; clear: both;">Saved Moments (Placeholder):</h3>
                 <div id="memoriesContainer">
-                    <p style="opacity: 0.7;">Loading your treasured memories...</p>
+                    <!-- Static Placeholder Message -->
+                    <div class="memory-item">
+                        <p style="margin: 0; white-space: pre-wrap;">That rainy day movie night was perfect. I remember every detail.</p>
+                        <span class="memory-date">Saved: Yesterday</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -555,33 +662,20 @@
 
         <div class="footer">
             <p>A forever dedication to my one and only love, Neha.</p>
-            <div id="userIdDisplay"></div>
+            <!-- Removed userIdDisplay -->
         </div>
 
     </div>
 
-    <script type="module">
-        // Import Firebase functions from the window object set by the script module above
-        const { 
-            initializeApp, getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged,
-            getFirestore, addDoc, onSnapshot, collection, query, serverTimestamp, setLogLevel 
-        } = window.firebase;
+    <script>
         
         // --- CONSTANTS AND STATE ---
         const CORRECT_CODE = "NEHA"; 
         // SET YOUR ANNIVERSARY DATE HERE (e.g., December 31, 2026)
         const ANNIVERSARY_DATE = new Date("December 31, 2026 00:00:00").getTime();
         // SET YOUR BIRTHDAY DATE HERE (December 27th)
-        const BIRTHDAY_DATE = new Date("December 27, 2025 00:00:00").getTime();
-        
-        let db;
-        let auth;
-        let userId = null;
-        let isAuthReady = false;
-
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // Note: Set this to a future year relative to the current date (Dec 11, 2025)
+        const BIRTHDAY_DATE = new Date("December 27, 2026 00:00:00").getTime();
         
         // --- AUDIO LOGIC (Tone.js) ---
         let ambientSynth;
@@ -611,10 +705,14 @@
 
             Tone.Transport.loop = true;
             Tone.Transport.loopEnd = '4m'; 
-            Tone.Transport.start(); // Start the transport scheduler immediately
+            // Tone.Transport.start() is not called here, it's called on unlock/initialization.
         }
         
         window.toggleAudio = function() {
+            // If Tone.Transport is not running, start it on the first interaction
+            if (Tone.Transport.state !== 'started') {
+                 Tone.Transport.start();
+            }
             if (Tone.context.state !== 'running') {
                 Tone.start();
             }
@@ -632,6 +730,10 @@
         }
 
         function playOnUnlock() {
+            // Start the Tone Transport when the page is unlocked
+            if (Tone.Transport.state !== 'started') {
+                 Tone.Transport.start();
+            }
             if (Tone.context.state !== 'running') {
                 Tone.start();
             }
@@ -770,180 +872,21 @@
             }, 1000);
         }
 
-        // --- FIREBASE INITIALIZATION & DATA FUNCTIONS ---
-
-        // Generic collection reference getter
-        function getCollectionRef(collectionName) {
-            if (!db || !userId) {
-                console.error("Firestore or User ID is not available.");
-                return null;
-            }
-            // Private path: /artifacts/{appId}/users/{userId}/{collectionName}
-            const path = `artifacts/${appId}/users/${userId}/${collectionName}`;
-            return collection(db, path);
-        }
-        
-        // Generic renderer for notes/memories
-        function renderNotes(notes, containerId) {
-            const container = document.getElementById(containerId);
-            container.innerHTML = '';
-
-            if (notes.length === 0) {
-                container.innerHTML = '<p style="opacity: 0.7; font-style: italic;">No notes saved yet. Add the first one!</p>';
-                return;
-            }
-            
-            notes.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
-
-            notes.forEach(note => {
-                const date = note.timestamp 
-                    ? new Date(note.timestamp.seconds * 1000).toLocaleString() 
-                    : 'Just now';
-                
-                const item = document.createElement('div');
-                item.className = 'memory-item';
-                item.innerHTML = `
-                    <p style="margin: 0; white-space: pre-wrap;">${note.text}</p>
-                    <span class="memory-date">Saved: ${date}</span>
-                `;
-                container.appendChild(item);
-            });
-        }
-        
-        function loadMemories() {
-            const memoriesRef = getCollectionRef('memories');
-            if (!memoriesRef) return;
-
-            onSnapshot(memoriesRef, (snapshot) => {
-                const memories = [];
-                snapshot.forEach(doc => {
-                    memories.push(doc.data());
-                });
-                renderNotes(memories, 'memoriesContainer');
-            }, (error) => {
-                console.error("Error loading memories:", error);
-                document.getElementById('memoriesContainer').innerHTML = '<p style="color: var(--color-rose);">Could not load memories. Please check console for errors.</p>';
-            });
-        }
-        
-        function loadTeddyNotes() {
-            const notesRef = getCollectionRef('teddy_notes');
-            if (!notesRef) return;
-
-            onSnapshot(notesRef, (snapshot) => {
-                const notes = [];
-                snapshot.forEach(doc => {
-                    notes.push(doc.data());
-                });
-                renderNotes(notes, 'teddyNotesContainer');
-            }, (error) => {
-                console.error("Error loading teddy notes:", error);
-                document.getElementById('teddyNotesContainer').innerHTML = '<p style="color: var(--color-rose);">Could not load notes for Teddy. Please check console for errors.</p>';
-            });
-        }
-
-
-        window.saveMemory = async function() {
-            const input = document.getElementById('memoryInput');
-            const memoryText = input.value.trim();
-
-            if (!memoryText) {
-                console.error("Please write a memory before saving!");
-                return;
-            }
-
-            const memoriesRef = getCollectionRef('memories');
-            if (!memoriesRef) return;
-
-            try {
-                await addDoc(memoriesRef, {
-                    text: memoryText,
-                    timestamp: serverTimestamp()
-                });
-                input.value = '';
-                console.log("Memory saved successfully.");
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        }
-        
-        window.saveTeddyNote = async function() {
-            const input = document.getElementById('teddyNoteInput');
-            const noteText = input.value.trim();
-
-            if (!noteText) {
-                console.error("Please write a note before sending!");
-                return;
-            }
-
-            const notesRef = getCollectionRef('teddy_notes');
-            if (!notesRef) return;
-
-            try {
-                await addDoc(notesRef, {
-                    text: noteText,
-                    timestamp: serverTimestamp()
-                });
-                input.value = '';
-                console.log("Teddy note saved successfully.");
-            } catch (e) {
-                console.error("Error adding teddy note: ", e);
-            }
-        }
-
-        async function initializeAppAndAuth() {
-            if (Object.keys(firebaseConfig).length === 0) {
-                console.error("Firebase config is missing.");
-                return;
-            }
-
-            const app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
-            setLogLevel('Debug');
-
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                } else {
-                    try {
-                        await signInAnonymously(auth);
-                        userId = auth.currentUser.uid;
-                    } catch (e) {
-                        userId = crypto.randomUUID(); 
-                        console.error("Anonymous sign-in failed, using random ID:", e);
-                    }
-                }
-                
-                isAuthReady = true;
-                document.getElementById('userIdDisplay').innerText = `App ID: ${appId} | User ID: ${userId}`;
-                
-                if (document.getElementById('mainContent').classList.contains('hidden') === false) {
-                    loadMemories();
-                    loadTeddyNotes(); 
-                }
-            });
-
-            try {
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-            } catch(error) {
-                console.error("Firebase initial sign-in failed:", error);
-            }
-        }
-        
         // --- PAGE LOGIC ---
         
         document.addEventListener('DOMContentLoaded', () => {
-            initializeAppAndAuth();
             initializeAudio(); 
+            // Check if site was previously unlocked (using local storage)
+            if (localStorage.getItem('love_site_unlocked') === 'true') {
+                 // Autounlock if saved, passing 'true' to bypass code check
+                 checkCode(true); 
+            }
         });
 
-        window.checkCode = async function() {
-            const input = document.getElementById('secretCode').value.toUpperCase().trim();
+        window.checkCode = function(isAutoUnlock = false) {
+            const inputElement = document.getElementById('secretCode');
+            // Check the input only if not auto-unlocking
+            const input = isAutoUnlock ? CORRECT_CODE : inputElement.value.toUpperCase().trim();
             const error = document.getElementById('errorMessage');
 
             if (input === CORRECT_CODE) {
@@ -957,23 +900,22 @@
                 startParticleAnimation(); 
                 playOnUnlock(); 
                 startCountdown(); 
-                startBirthdayCountdown(); // START BIRTHDAY COUNTDOWN
+                startBirthdayCountdown(); 
                 
-                // Load and autoplay the song player
+                // Load and autoplay the song player (YouTube)
                 const player = document.getElementById('userSongPlayer');
                 if (player) {
                     const src = player.getAttribute('data-src');
                     player.src = src; 
                 }
 
-                if (isAuthReady) {
-                    loadMemories();
-                    loadTeddyNotes(); 
-                }
+                // Placeholder saving functions will rely on alerts when buttons are clicked
+                // Data loading calls are removed since there is no database
 
             } else {
                 // Failure: show error message
                 error.classList.remove('hidden');
+                inputElement.value = ''; // Clear input on failed attempt
             }
         }
     </script>
